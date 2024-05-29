@@ -178,6 +178,7 @@ public class Web3Modal {
             imageId: "a5ebc364-8f91-4200-fcc6-be81310a0000",
             order: 4,
             mobileLink: nil,
+            linkMode: nil,
             desktopLink: nil,
             webappLink: nil,
             appStore: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",

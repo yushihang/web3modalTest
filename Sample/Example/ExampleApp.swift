@@ -45,7 +45,7 @@ class ExampleApp: App {
             description: "Web3Modal DApp sample",
             url: "www.web3modal.com",
             icons: ["https://avatars.githubusercontent.com/u/37784886"],
-            redirect: try! .init(native: "w3mdapp://", universal: nil)
+            redirect: try! .init(native: "w3mdapp://", universal: "https://lab.web3modal.com/dapp", linkMode: true)
         )
 
         Networking.configure(
@@ -65,7 +65,8 @@ class ExampleApp: App {
                     homepage: "https://walletconnect.com/",
                     imageUrl: "https://avatars.githubusercontent.com/u/37784886?s=200&v=4",
                     order: 1,
-                    mobileLink: "walletapp://"
+                    mobileLink: "walletapp://",
+                    linkMode: "https://lab.web3modal.com/wallet"
                 )
             ]
         ) { error in

@@ -72,6 +72,10 @@ public class Web3ModalClient {
         signClient.sessionEventPublisher.eraseToAnyPublisher()
     }
 
+    public var authResponsePublisher: AnyPublisher<(id: RPCID, result: Result<(Session?, [Cacao]), AuthError>), Never> {
+        signClient.authResponsePublisher
+    }
+
     public var isAnalyticsEnabled: Bool {
         return analyticsService.isAnalyticsEnabled
     }
@@ -117,11 +121,11 @@ public class Web3ModalClient {
     /// Namespaces from Web3Modal.config will be used
     /// - Parameters:
     ///   - topic: pairing topic
-    public func connect() async throws -> WalletConnectURI? {
+    public func connect(walletUniversalLink: String?) async throws -> WalletConnectURI? {
         logger.debug("Connecting Application")
         do {
             if let authParams = Web3Modal.config.authRequestParams {
-                return try await signClient.authenticate(authParams, walletUniversalLink: nil)
+                return try await signClient.authenticate(authParams, walletUniversalLink: walletUniversalLink)
             } else {
                 let pairingURI = try await pairingClient.create()
                 try await signClient.connect(
