@@ -78,7 +78,7 @@ public class Web3ModalClient {
 
     // MARK: - Private Properties
 
-    private let signClient: SignClientProtocol
+    private let signClient: SignClient
     private let pairingClient: PairingClientProtocol & PairingInteracting & PairingRegisterer
     private let store: Store
     private let analyticsService: AnalyticsService
@@ -87,7 +87,7 @@ public class Web3ModalClient {
 
     init(
         logger: ConsoleLogging,
-        signClient: SignClientProtocol,
+        signClient: SignClient,
         pairingClient: PairingClientProtocol & PairingInteracting & PairingRegisterer,
         store: Store,
         analyticsService: AnalyticsService
@@ -117,61 +117,27 @@ public class Web3ModalClient {
     /// Namespaces from Web3Modal.config will be used
     /// - Parameters:
     ///   - topic: pairing topic
-    public func connect(
-        topic: String?
-    ) async throws -> WalletConnectURI? {
+    public func connect(_ authParams: AuthRequestParams?) async throws -> WalletConnectURI? {
         logger.debug("Connecting Application")
+        let pairingURI = try await pairingClient.create()
         do {
-            if let topic = topic {
-                try pairingClient.validatePairingExistance(topic)
-                try await signClient.connect(
-                    requiredNamespaces: Web3Modal.config.sessionParams.requiredNamespaces,
-                    optionalNamespaces: Web3Modal.config.sessionParams.optionalNamespaces,
-                    sessionProperties: Web3Modal.config.sessionParams.sessionProperties,
-                    topic: topic
-                )
-                return nil
+            if let authParams = authParams {
+                try await signClient.authenticate(authParams, topic: pairingURI.topic)
             } else {
-                let pairingURI = try await pairingClient.create()
                 try await signClient.connect(
                     requiredNamespaces: Web3Modal.config.sessionParams.requiredNamespaces,
                     optionalNamespaces: Web3Modal.config.sessionParams.optionalNamespaces,
                     sessionProperties: Web3Modal.config.sessionParams.sessionProperties,
                     topic: pairingURI.topic
                 )
-                return pairingURI
             }
+            return pairingURI
         } catch {
             Web3Modal.config.onError(error)
             throw error
         }
     }
-    
-    /// For proposing a session to a wallet.
-    /// Function will propose a session on existing pairing.
-    /// - Parameters:
-    ///   - requiredNamespaces: required namespaces for a session
-    ///   - topic: pairing topic
-    public func connect(
-        requiredNamespaces: [String: ProposalNamespace],
-        optionalNamespaces: [String: ProposalNamespace]? = nil,
-        sessionProperties: [String: String]? = nil,
-        topic: String
-    ) async throws {
-        logger.debug("Connecting Application on topic: \(topic)")
-        do {
-            try await signClient.connect(
-                requiredNamespaces: requiredNamespaces,
-                optionalNamespaces: optionalNamespaces,
-                sessionProperties: sessionProperties,
-                topic: topic
-            )
-        } catch {
-            Web3Modal.config.onError(error)
-            throw error
-        }
-    }
-    
+
     /// Ping method allows to check if peer client is online and is subscribing for given topic
     ///
     ///  Should Error:

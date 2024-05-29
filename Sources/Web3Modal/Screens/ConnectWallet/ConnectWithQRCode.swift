@@ -44,7 +44,7 @@ struct ConnectWithQRCode: View {
     private func connect() {
         Task {
             do {
-                try await signInteractor.createPairingAndConnect()
+                try await signInteractor.connect()
             } catch {
                 store.toast = .init(style: .error, message: "Failed to create connection URI.")
             }
@@ -82,7 +82,7 @@ struct ConnectWithQRCode_Previews: PreviewProvider {
     
     class MockSignInteractor: SignInteractor {
                     
-        override func createPairingAndConnect() async throws {
+        override func connect() async throws {
             // no-op
         }
     }

@@ -16,8 +16,8 @@ class SignInteractor: ObservableObject {
         self.store = store
     }
     
-    func createPairingAndConnect() async throws  {
-        let uri = try await Web3Modal.instance.connect(topic: nil)
+    func connect(_ authParams: AuthRequestParams?) async throws  {
+        let uri = try await Web3Modal.instance.connect(authParams)
         
         DispatchQueue.main.async {
             self.store.uri = uri
