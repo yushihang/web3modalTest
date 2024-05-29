@@ -58,15 +58,15 @@ class ExampleApp: App {
             projectId: projectId,
             metadata: metadata,
             crypto: DefaultCryptoProvider(),
-            customWallets: [
+            authRequestParams: .stub(), customWallets: [
                 .init(
-                     id: "swift-sample",
-                     name: "Swift Sample Wallet",
-                     homepage: "https://walletconnect.com/",
-                     imageUrl: "https://avatars.githubusercontent.com/u/37784886?s=200&v=4",
-                     order: 1,
-                     mobileLink: "walletapp://"
-                 )
+                    id: "swift-sample",
+                    name: "Swift Sample Wallet",
+                    homepage: "https://walletconnect.com/",
+                    imageUrl: "https://avatars.githubusercontent.com/u/37784886?s=200&v=4",
+                    order: 1,
+                    mobileLink: "walletapp://"
+                )
             ]
         ) { error in
             SentrySDK.capture(error: error)
@@ -85,6 +85,9 @@ class ExampleApp: App {
 
         }.store(in: &disposeBag)
         Web3Modal.instance.logger.setLogging(level: .debug)
+        Sign.instance.setLogging(level: .debug)
+        Networking.instance.setLogging(level: .debug)
+        Relay.instance.setLogging(level: .debug)
     }
 
     var body: some Scene {
@@ -114,5 +117,33 @@ class ExampleApp: App {
                     }
                 })
         }
+    }
+}
+
+extension AuthRequestParams {
+    static func stub(
+        domain: String = "lab.web3modal.com",
+        chains: [String] = ["eip155:1", "eip155:137"],
+        nonce: String = "32891756",
+        uri: String = "https://lab.web3modal.com",
+        nbf: String? = nil,
+        exp: String? = nil,
+        statement: String? = "I accept the ServiceOrg Terms of Service: https://lab.web3modal.com",
+        requestId: String? = nil,
+        resources: [String]? = nil,
+        methods: [String]? = ["personal_sign", "eth_sendTransaction"]
+    ) -> AuthRequestParams {
+        return try! AuthRequestParams(
+            domain: domain,
+            chains: chains,
+            nonce: nonce,
+            uri: uri,
+            nbf: nbf,
+            exp: exp,
+            statement: statement,
+            requestId: requestId,
+            resources: resources,
+            methods: methods
+        )
     }
 }

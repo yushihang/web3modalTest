@@ -117,21 +117,21 @@ public class Web3ModalClient {
     /// Namespaces from Web3Modal.config will be used
     /// - Parameters:
     ///   - topic: pairing topic
-    public func connect(_ authParams: AuthRequestParams?) async throws -> WalletConnectURI? {
+    public func connect() async throws -> WalletConnectURI? {
         logger.debug("Connecting Application")
-        let pairingURI = try await pairingClient.create()
         do {
-            if let authParams = authParams {
-                try await signClient.authenticate(authParams, topic: pairingURI.topic)
+            if let authParams = Web3Modal.config.authRequestParams {
+                return try await signClient.authenticate(authParams, walletUniversalLink: nil)
             } else {
+                let pairingURI = try await pairingClient.create()
                 try await signClient.connect(
                     requiredNamespaces: Web3Modal.config.sessionParams.requiredNamespaces,
                     optionalNamespaces: Web3Modal.config.sessionParams.optionalNamespaces,
                     sessionProperties: Web3Modal.config.sessionParams.sessionProperties,
                     topic: pairingURI.topic
                 )
+                return pairingURI
             }
-            return pairingURI
         } catch {
             Web3Modal.config.onError(error)
             throw error

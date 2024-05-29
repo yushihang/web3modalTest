@@ -99,7 +99,7 @@ class Web3ModalViewModel: ObservableObject {
             .store(in: &disposeBag)
         
         Task {
-            try? await signInteractor.connect(Web3Modal.config.authRequestParams)
+            try? await signInteractor.connect()
         }
     }
     
