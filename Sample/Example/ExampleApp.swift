@@ -45,7 +45,7 @@ class ExampleApp: App {
             description: "Web3Modal DApp sample",
             url: "www.web3modal.com",
             icons: ["https://avatars.githubusercontent.com/u/37784886"],
-            redirect: .init(native: "w3mdapp://", universal: nil)
+            redirect: try! .init(native: "w3mdapp://", universal: nil)
         )
 
         Networking.configure(
@@ -72,6 +72,7 @@ class ExampleApp: App {
             
             print(error)
         }
+        
         setup()
 
     }
