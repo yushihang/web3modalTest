@@ -45,7 +45,7 @@ class ExampleApp: App {
             description: "Web3Modal DApp sample",
             url: "www.web3modal.com",
             icons: ["https://avatars.githubusercontent.com/u/37784886"],
-            redirect: try! .init(native: "w3mdapp://", universal: "https://lab.web3modal.com/dapp", linkMode: true)
+            redirect: try! .init(native: "w3mdapp://", universal: "https://lab.web3modal.com/web3modal_example", linkMode: true)
         )
 
         Networking.configure(
