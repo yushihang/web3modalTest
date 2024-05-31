@@ -59,16 +59,17 @@ class Web3ModalViewModel: ObservableObject {
 
         signInteractor.authResponsePublisher
             .receive(on: DispatchQueue.main)
-            .sink { response in
+            .sink { [weak self] response in
                 switch response.result {
                 case .success(let (session, _)):
                     if let session = session {
-                        self.handleNewSession(session: session)
+                        self?.handleNewSession(session: session)
                     }
                 case .failure(let error):
                     // Handle the error similarly to how other errors are handled in the class
                     store.toast = .init(style: .error, message: "Authentication error: \(error.localizedDescription)")
                     Web3Modal.config.onError(error)
+                    self?.store.retryShown = true
                 }
             }
             .store(in: &disposeBag)

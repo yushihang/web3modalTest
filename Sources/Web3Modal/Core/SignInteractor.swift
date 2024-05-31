@@ -13,6 +13,7 @@ class SignInteractor: ObservableObject {
     lazy var sessionEventPublisher: AnyPublisher<(event: Session.Event, sessionTopic: String, chainId: Blockchain?), Never> = Web3Modal.instance.sessionEventPublisher
     lazy var authResponsePublisher: AnyPublisher<(id: RPCID, result: Result<(Session?, [Cacao]), AuthError>), Never> = Web3Modal.instance.authResponsePublisher
 
+
     init(store: Store = .shared) {
         self.store = store
     }

@@ -331,6 +331,17 @@ public class Web3ModalClient {
     
     @discardableResult
     public func handleDeeplink(_ url: URL) -> Bool {
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let queryItems = components.queryItems,
+           queryItems.contains(where: { $0.name == "wc_ev" }) {
+            do {
+                try signClient.dispatchEnvelope(url.absoluteString)
+                return true
+            } catch {
+                store.toast = .init(style: .error, message: error.localizedDescription)
+                return false
+            }
+        }
         do {
             return try CoinbaseWalletSDK.shared.handleResponse(url)
         } catch {
