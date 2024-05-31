@@ -25,7 +25,7 @@ public struct Wallet: Codable, Identifiable {
         case imageUrl = "image_url"
         case order
         case mobileLink = "mobile_link"
-        case linkMode
+        case linkMode = "link_mode"
         case desktopLink = "desktop_link"
         case webappLink = "webapp_link"
         case appStore = "app_store"
@@ -108,7 +108,7 @@ extension Wallet {
             imageId: "0528ee7e-16d1-4089-21e3-bbfb41933100",
             order: 1,
             mobileLink: "https://sample.com/foo/universal",
-            linkMode: "https://lab.web3modal.com/dapp", desktopLink: "sampleapp://deeplink",
+            linkMode: "https://lab.web3modal.com/wallet", desktopLink: "sampleapp://deeplink",
             webappLink: "https://sample.com/foo/webapp",
             appStore: ""
         ),
@@ -119,7 +119,7 @@ extension Wallet {
             imageId: "5195e9db-94d8-4579-6f11-ef553be95100",
             order: 2,
             mobileLink: "awsomeapp://",
-            linkMode: "https://lab.web3modal.com/dapp", desktopLink: "awsomeapp://deeplink",
+            linkMode: "https://lab.web3modal.com/wallet", desktopLink: "awsomeapp://deeplink",
             webappLink: "https://awesome.com/foo/webapp",
             appStore: ""
         ),
@@ -130,7 +130,7 @@ extension Wallet {
             imageId: "3913df81-63c2-4413-d60b-8ff83cbed500",
             order: 3,
             mobileLink: "https://cool.com/foo/universal",
-            linkMode: "https://lab.web3modal.com/dapp",
+            linkMode: "https://lab.web3modal.com/wallet",
             desktopLink: "coolapp://deeplink",
             webappLink: "https://cool.com/foo/webapp",
             appStore: ""
