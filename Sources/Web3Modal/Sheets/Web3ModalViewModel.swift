@@ -52,26 +52,30 @@ class Web3ModalViewModel: ObservableObject {
         signInteractor.sessionSettlePublisher
             .receive(on: DispatchQueue.main)
             .sink { session in
-                router.setRoute(Router.AccountSubpage.profile)
-                store.connectedWith = .wc
-                store.account = .init(from: session)
-                store.session = session
-                
-                if
-                    let blockchain = session.accounts.first?.blockchain,
-                    let matchingChain = ChainPresets.ethChains.first(where: { $0.chainNamespace == blockchain.namespace && $0.chainReference == blockchain.reference })
-                {
-                    store.selectedChain = matchingChain
-                }
-                
-                self.fetchIdentity()
-                
-                withAnimation {
-                    store.isModalShown = false
+                self.handleNewSession(session: session)
+            }
+            .store(in: &disposeBag)
+
+
+        signInteractor.authResponsePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] response in
+                switch response.result {
+                case .success(let (session, _)):
+                    if let session = session {
+                        self?.handleNewSession(session: session)
+                    }
+                case .failure(let error):
+                    // Handle the error similarly to how other errors are handled in the class
+                    store.toast = .init(style: .error, message: "Authentication error: \(error.localizedDescription)")
+                    Web3Modal.config.onError(error)
+                    self?.store.retryShown = true
                 }
             }
             .store(in: &disposeBag)
-        
+
+
+
         signInteractor.sessionDeletePublisher
             .receive(on: DispatchQueue.main)
             .sink { topic, _ in
@@ -99,7 +103,7 @@ class Web3ModalViewModel: ObservableObject {
             .store(in: &disposeBag)
         
         Task {
-            try? await signInteractor.createPairingAndConnect()
+            try? await signInteractor.connect(walletUniversalLink: nil)
         }
     }
     
@@ -124,7 +128,28 @@ class Web3ModalViewModel: ObservableObject {
             }
         }
     }
-    
+
+    private func handleNewSession(session: Session) {
+        router.setRoute(Router.AccountSubpage.profile)
+        store.connectedWith = .wc
+        store.account = .init(from: session)
+        store.session = session
+
+        if
+            let blockchain = session.accounts.first?.blockchain,
+            let matchingChain = ChainPresets.ethChains.first(where: { $0.chainNamespace == blockchain.namespace && $0.chainReference == blockchain.reference })
+        {
+            store.selectedChain = matchingChain
+        }
+
+        fetchIdentity()
+
+        withAnimation {
+            store.isModalShown = false
+        }
+    }
+
+
     func getChains() -> [Chain] {
         guard let namespaces = store.session?.namespaces.values else {
             return []

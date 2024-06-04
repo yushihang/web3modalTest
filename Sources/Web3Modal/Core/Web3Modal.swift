@@ -68,8 +68,10 @@ public class Web3Modal {
         
         let projectId: String
         var metadata: AppMetadata
+        let crypto: CryptoProvider
         var sessionParams: SessionParams
-        
+        var authRequestParams: AuthRequestParams?
+
         let includeWebWallets: Bool
         let recommendedWalletIds: [String]
         let excludedWalletIds: [String]
@@ -77,6 +79,7 @@ public class Web3Modal {
         let coinbaseEnabled: Bool
 
         let onError: (Error) -> Void
+
     }
     
     private(set) static var config: Config!
@@ -91,7 +94,9 @@ public class Web3Modal {
     public static func configure(
         projectId: String,
         metadata: AppMetadata,
+        crypto: CryptoProvider,
         sessionParams: SessionParams = .default,
+        authRequestParams: AuthRequestParams?,
         includeWebWallets: Bool = true,
         recommendedWalletIds: [String] = [],
         excludedWalletIds: [String] = [],
@@ -104,7 +109,9 @@ public class Web3Modal {
         Web3Modal.config = Web3Modal.Config(
             projectId: projectId,
             metadata: metadata,
+            crypto: crypto,
             sessionParams: sessionParams,
+            authRequestParams: authRequestParams,
             includeWebWallets: includeWebWallets,
             recommendedWalletIds: recommendedWalletIds,
             excludedWalletIds: excludedWalletIds,
@@ -112,7 +119,9 @@ public class Web3Modal {
             coinbaseEnabled: coinbaseEnabled,
             onError: onError
         )
-        
+
+        Sign.configure(crypto: crypto)
+
         let store = Store.shared
         let router = Router()
         let w3mApiInteractor = W3MAPIInteractor(store: store)
@@ -169,6 +178,7 @@ public class Web3Modal {
             imageId: "a5ebc364-8f91-4200-fcc6-be81310a0000",
             order: 4,
             mobileLink: nil,
+            linkMode: nil,
             desktopLink: nil,
             webappLink: nil,
             appStore: "https://apps.apple.com/us/app/coinbase-wallet-nfts-crypto/id1278383455",
@@ -305,8 +315,8 @@ public struct SessionParams {
     public static let `default`: Self = {
         let methods: Set<String> = Set(EthUtils.ethMethods)
         let events: Set<String> = ["chainChanged", "accountsChanged"]
-        let blockchains: Set<Blockchain> = Set(ChainPresets.ethChains.map(\.id).compactMap(Blockchain.init))
-        
+        let blockchains = ChainPresets.ethChains.map(\.id).compactMap(Blockchain.init)
+
         let namespaces: [String: ProposalNamespace] = [
             "eip155": ProposalNamespace(
                 chains: blockchains,

@@ -217,7 +217,7 @@ struct WalletDetailView: View {
 #if DEBUG
 
 class MockSignInteractor: SignInteractor {
-    override func createPairingAndConnect() async throws {
+    override func connect(walletUniversalLink: String?) async throws {
         // no-op
     }
     
