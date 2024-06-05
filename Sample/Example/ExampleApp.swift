@@ -49,7 +49,7 @@ class ExampleApp: App {
         )
 
         Networking.configure(
-            groupIdentifier: "group.com.walletconnect.web3modal",
+            groupIdentifier: "group.crush",
             projectId: projectId,
             socketFactory: DefaultSocketFactory()
         )
