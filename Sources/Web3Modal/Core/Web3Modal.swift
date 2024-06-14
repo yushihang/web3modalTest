@@ -70,7 +70,12 @@ public class Web3Modal {
         var metadata: AppMetadata
         let crypto: CryptoProvider
         var sessionParams: SessionParams
-        var authRequestParams: AuthRequestParams?
+        var authRequestParams: AuthRequestParams? {
+            didSet {
+
+                print("authRequestParams has been assigned")
+            }
+        }
 
         let includeWebWallets: Bool
         let recommendedWalletIds: [String]

@@ -3,7 +3,7 @@ import Foundation
 struct InputConfig {
 
     static var projectId: String {
-        guard let projectId = config(for: "PROJECT_ID"), !projectId.isEmpty else {
+       guard let projectId = config(for: "PROJECT_ID"), !projectId.isEmpty else {
             fatalError("PROJECT_ID is either not defined or empty in Configuration.xcconfig")
         }
         

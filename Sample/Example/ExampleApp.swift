@@ -126,7 +126,7 @@ extension AuthRequestParams {
     static func stub(
         domain: String = "lab.web3modal.com",
         chains: [String] = ["eip155:1", "eip155:137"],
-        nonce: String = "32891756",
+        nonce: String = "32891716",
         uri: String = "https://lab.web3modal.com",
         nbf: String? = nil,
         exp: String? = nil,

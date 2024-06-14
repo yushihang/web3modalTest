@@ -103,7 +103,7 @@ class Web3ModalViewModel: ObservableObject {
             .store(in: &disposeBag)
         
         Task {
-            try? await signInteractor.connect(walletUniversalLink: nil)
+            //try? await signInteractor.connect(walletUniversalLink: nil)
         }
     }
     
