@@ -49,7 +49,7 @@ class ExampleApp: App {
         )
 
         Networking.configure(
-            groupIdentifier: "group.crush",
+            groupIdentifier: "group.crush1wc",
             projectId: projectId,
             socketFactory: DefaultSocketFactory()
         )
@@ -125,7 +125,7 @@ class ExampleApp: App {
 extension AuthRequestParams {
     static func stub(
         domain: String = "lab.web3modal.com",
-        chains: [String] = ["eip155:1", "eip155:137"],
+        chains: [String] = ["eip155:1", "eip155:137"],//["cosmos:kava-4"],//["eip155:1", "eip155:137"],
         nonce: String = "32891716",
         uri: String = "https://lab.web3modal.com",
         nbf: String? = nil,
@@ -133,7 +133,7 @@ extension AuthRequestParams {
         statement: String? = "I accept the ServiceOrg Terms of Service: https://lab.web3modal.com",
         requestId: String? = nil,
         resources: [String]? = nil,
-        methods: [String]? = ["personal_sign", "eth_sendTransaction"]
+        methods: [String]? = ["personal_sign", "eth_sendTransaction", "eth_signTypedData"]
     ) -> AuthRequestParams {
         return try! AuthRequestParams(
             domain: domain,
